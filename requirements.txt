@@ -4,5 +4,5 @@ scikit-learn
 numpy
 matplotlib
 seaborn
-imbalanced-learn
+imbalanced-learn==0.13.0
 plotly
