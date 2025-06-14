@@ -1,15 +1,25 @@
 import streamlit as st
-import pickle as pk
-import requests
+import pickle
 import pandas as pd
 from pathlib import Path
-import matplotlib.pyplot as plt
-
-with open("Credit Score Classification.pkl", "rb") as f:
-    model = pk.load(f)
-
 
 st.set_page_config(page_title='Credit Score Classification')
+
+@st.cache_resource
+def load_model():
+    base = Path(__file__).resolve().parent
+    with open(base / "Credit_Score_Classification.pkl", "rb") as f:
+        return pickle.load(f)
+
+
+model = load_model()
+
+# File path for CSV
+BASE_DIR = Path(__file__).resolve().parent
+data_path = BASE_DIR / "backup_clean.csv"
+
+data = pd.read_csv(data_path)
+
 
 st.title("Credit Score Classification")
 st.write("Analyze financial data to predict Credit Score Classification (Poor, Standard, or Good)")
