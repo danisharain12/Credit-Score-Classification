@@ -3,13 +3,19 @@ import pickle as pk
 import pandas as pd
 from pathlib import Path
 import matplotlib.pyplot as plt
+import requests
 
-# File paths
-BASE_DIR = Path(__file__).resolve().parent
-model_path = BASE_DIR / "Credit Score Classification.pkl"
+# File's direct link from Google Drive
+FILE_ID = "1x0pWYZaBAWb9a1B37eo7V8RjcNgYrzlp"
+URL = f"https://drive.google.com/uc?id={FILE_ID}&export=download"
 
-with open(model_path, "rb") as f:
-    model = pk.load(f)
+@st.cache_data
+def load_model(url):
+    response = requests.get(url)
+    response.raise_for_status()
+    return pk.loads(response.content)
+
+model = load_model(URL)
 
 
 # Streamlit UI
