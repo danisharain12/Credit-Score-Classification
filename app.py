@@ -1,31 +1,15 @@
 import streamlit as st
-import pickle
+import pickle as pk
 import requests
 import pandas as pd
 from pathlib import Path
 import matplotlib.pyplot as plt
 
-# File's direct link from Google Drive
-URL = "https://drive.google.com/uc?id=1x0pWYZaBAWb9a1B37eo7V8RjcNgYrzlp&export=download"
-
-def load_model(url):
-    response = requests.get(url)
-    response.raise_for_status()
-    return pickle.loads(response.content)
-
-model = load_model(URL)
+with open("Credit Score Classification.pkl", "rb") as f:
+    model = pk.load(f)
 
 
-@st.cache_data
-def load_model(url):
-    response = requests.get(url)
-    response.raise_for_status()
-    return pickle.loads(response.content)
-
-
-model = load_model(URL)
-
-st.set_page_config(page_title='Credit Score Classification', layout='wide')
+st.set_page_config(page_title='Credit Score Classification')
 
 st.title("Credit Score Classification")
 st.write("Analyze financial data to predict Credit Score Classification (Poor, Standard, or Good)")
@@ -55,7 +39,7 @@ with st.container():
 
 
 # Perform prediction
-if st.button("Predict Credit Score Classification"):
+if st.button("Predict Credit Score"):
 
     input_df = pd.DataFrame([{
         "Outstanding_Debt": outstanding_debt,
