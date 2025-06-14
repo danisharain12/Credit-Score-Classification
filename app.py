@@ -1,25 +1,31 @@
 import streamlit as st
-import pickle as pk
+import pickle
+import requests
 import pandas as pd
 from pathlib import Path
 import matplotlib.pyplot as plt
-import requests
 
 # File's direct link from Google Drive
-FILE_ID = "1x0pWYZaBAWb9a1B37eo7V8RjcNgYrzlp"
-URL = f"https://drive.google.com/uc?id={FILE_ID}&export=download"
+URL = "https://drive.google.com/uc?id=1x0pWYZaBAWb9a1B37eo7V8RjcNgYrzlp&export=download"
+
+def load_model(url):
+    response = requests.get(url)
+    response.raise_for_status()
+    return pickle.loads(response.content)
+
+model = load_model(URL)
+
 
 @st.cache_data
 def load_model(url):
     response = requests.get(url)
     response.raise_for_status()
-    return pk.loads(response.content)
+    return pickle.loads(response.content)
+
 
 model = load_model(URL)
 
-
-# Streamlit UI
-st.set_page_config(page_title='Credit Score Classification', layout='wide', initial_sidebar_state='expanded')
+st.set_page_config(page_title='Credit Score Classification', layout='wide')
 
 st.title("Credit Score Classification")
 st.write("Analyze financial data to predict Credit Score Classification (Poor, Standard, or Good)")
@@ -83,9 +89,10 @@ if st.button("Predict Credit Score Classification"):
     st.write("## Input Data")
     st.dataframe(input_df)
 
+
 with st.expander("ℹ About this Model and App"):
     st.write("""
 This Credit Score Classification Model was trained with historical financial data.  
 It assesses financial stability and classifies the score into **Poor**, **Standard**, or **Good**.  
-The algorithm considers multiple financial indicators.  
+The algorithm considers multiple financial indicators.
     """)
