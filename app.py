@@ -1,25 +1,51 @@
 import streamlit as st
+import gdown
+import os
 import joblib
 import pandas as pd
-import requests
-from pathlib import Path
 
-st.set_page_config(page_title='Credit Score Classification')
+# File IDs and URLs
+FILE_ID = "1MclSppXYEi6VPOpNvkHII-Cq-_ZOuam_"  # YOUR FILE ID HERE
+URL = f"https://drive.google.com/uc?id={FILE_ID}"
 
-BASE_DIR = Path(__file__).resolve().parent
-model_path = BASE_DIR / 'Credit_Score_Classification.joblib'
-with open(model_path, 'rb') as file:
-    model = joblib.load(file)
+# Local path to save after downloading
+model_file = "Credit_Score_Classification.joblib"
 
-data_path = BASE_DIR / 'backup_clean.csv'
-data = pd.read_csv(data_path)
+# Download if not already downloaded
+if not os.path.exists(model_file):
+    st.info("Downloading from Google Drive...")
+    gdown.download(URL, model_file, quiet=False)
+    st.success("Model downloaded successfully.")
+else:
+    st.success("Model already downloaded.")
 
+
+# Confirm and load the model
+if os.path.exists(model_file):
+    st.success(f"Model found at: {model_file}")
+
+    # File size (just for sanity)
+    st.write("File size (bytes):", os.path.getsize(model_file))
+
+    # Loading the model
+    try:
+        model = joblib.load(model_file)
+        st.success("Model loaded successfully.")
+    except Exception as e:
+        st.error(f"Error while loading the model: {e}")
+
+        st.stop()
+else:
+    st.error("Model not found after attempted download.")
+    st.stop()
+
+
+# Streamlit UI
 st.title("Credit Score Classification")
 st.write("Analyze financial data to predict Credit Score Classification (Poor, Standard, or Good)")
 
 st.info("Adjust the inputs and click **Predict Credit Score Classification**")
 
-# Input widgets in two columns
 with st.container():
     col1, col2 = st.columns(2)
     with col1:
