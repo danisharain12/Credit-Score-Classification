@@ -16,21 +16,13 @@ if not os.path.exists(model_file):
     st.info("Downloading from Google Drive...")
     gdown.download(URL, model_file, quiet=False)
     st.success("Model downloaded successfully.")
-else:
-    st.success("Model already downloaded.")
-
 
 # Confirm and load the model
 if os.path.exists(model_file):
-    st.success(f"Model found at: {model_file}")
-
-    # File size (just for sanity)
-    st.write("File size (bytes):", os.path.getsize(model_file))
 
     # Loading the model
     try:
         model = joblib.load(model_file)
-        st.success("Model loaded successfully.")
     except Exception as e:
         st.error(f"Error while loading the model: {e}")
 
@@ -40,20 +32,23 @@ else:
     st.stop()
 
 
-# Streamlit UI
 st.title("Credit Score Classification")
 st.write("Analyze financial data to predict Credit Score Classification (Poor, Standard, or Good)")
 
 st.info("Adjust the inputs and click **Predict Credit Score Classification**")
 
+st.divider()
+
+st.subheader("Provide Credit-related Information")
+
 with st.container():
     col1, col2 = st.columns(2)
     with col1:
         outstanding_debt = st.number_input("Outstanding Debt ($)", min_value=0.0, max_value=1000000.0, value=809.98)
-        credit_mix = st.number_input("Credit Mix", min_value=0.0, max_value=10.0, value=2.0, step=0.5)
-        changed_credit = st.number_input("Changed Credit Limit (%)", min_value=0.0, max_value=100.0, value=11.27)
+        credit_mix = st.number_input("Credit Mix ( Number of Credit Types)", min_value=0.0, max_value=10.0, value=2.0, step=0.5)
+        changed_credit = st.number_input("Change in Credit Limit (%)", min_value=0.0, max_value=100.0, value=11.27)
         amount_invested = st.number_input("Amount Invested Monthly ($)", min_value=0.0, max_value=1000000.0, value=80.42)
-        num_inquiries = st.number_input("Num of Credit Inquiries", min_value=0, max_value=100, value=4)
+        num_inquiries = st.number_input("Number of Credit Inquiries", min_value=0, max_value=100, value=4)
         total_emi = st.number_input("Total EMI per month ($)", min_value=0.0, max_value=1000000.0, value=49.57)
         annual_income = st.number_input("Annual Income ($)", min_value=0.0, max_value=1000000.0, value=19114.12)
 
@@ -61,11 +56,14 @@ with st.container():
         interest_rate = st.number_input("Interest Rate (%)", min_value=0.0, max_value=100.0, value=3.0, step=0.5)
         delay = st.number_input("Delay From Due Date (days)", min_value=0.0, max_value=100.0, value=3.0)
         monthly_balance = st.number_input("Monthly Balance ($)", min_value=0.0, max_value=1000000.0, value=312.490089)
-        credit_ratio = st.number_input("Credit Utilization Ratio", min_value=0.0, max_value=100.0, value=26.83)
-        num_delayed = st.number_input("Num of Delayed Payments", min_value=0, max_value=100, value=7)
-        num_credit_card = st.number_input("Num Credit Card(s)", min_value=0, max_value=100, value=4)
+        credit_ratio = st.number_input("Credit Utilization Ratio (%)", min_value=0.0, max_value=100.0, value=26.83)
+        num_delayed = st.number_input("Number of Delayed Payments", min_value=0, max_value=100, value=7)
+        num_credit_card = st.number_input("Number of Credit Cards(s)", min_value=0, max_value=100, value=4)
         monthly_inhand = st.number_input("Monthly In-Hand Salary ($)", min_value=0.0, max_value=1000000.0, value=1824.83)
 
+
+st.divider()
+st.success("Click the button below to predict your Credit Score Classification")
 
 # Perform prediction
 if st.button("Predict Credit Score"):
@@ -94,11 +92,10 @@ if st.button("Predict Credit Score"):
     if predicted_label == "Good":
         st.success(f"Credit Score Classification: **{predicted_label}**")
     elif predicted_label == "Standard":
-        st.info(f"Credit Score Classification: **{predicted_label}**")
+        st.info(f"ℹ Credit Score Classification: **{predicted_label}**")
     else:
         st.error(f"Credit Score Classification: **{predicted_label}**")
 
-    # Display the input data in a table
     st.write("## Input Data")
     st.dataframe(input_df)
 
@@ -108,4 +105,10 @@ with st.expander("ℹ About this Model and App"):
 This Credit Score Classification Model was trained with historical financial data.  
 It assesses financial stability and classifies the score into **Poor**, **Standard**, or **Good**.  
 The algorithm considers multiple financial indicators.
+
+**Task:**  
+- You are working as a data scientist in a global finance company.  
+- The company wants to reduce manual efforts by building a smart system for Credit Score Classification.  
+- This application helps streamline the process by evaluating financial data efficiently.
     """)
+
