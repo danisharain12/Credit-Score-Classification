@@ -1,25 +1,18 @@
 import streamlit as st
-import pickle
+import joblib
 import pandas as pd
+import requests
 from pathlib import Path
 
 st.set_page_config(page_title='Credit Score Classification')
 
-@st.cache_resource
-def load_model():
-    base = Path(__file__).resolve().parent
-    with open(base / "Credit_Score_Classification.pkl", "rb") as f:
-        return pickle.load(f)
-
-
-model = load_model()
-
-# File path for CSV
 BASE_DIR = Path(__file__).resolve().parent
-data_path = BASE_DIR / "backup_clean.csv"
+model_path = BASE_DIR / 'Credit_Score_Classification.joblib'
+with open(model_path, 'rb') as file:
+    model = joblib.load(file)
 
+data_path = BASE_DIR / 'backup_clean.csv'
 data = pd.read_csv(data_path)
-
 
 st.title("Credit Score Classification")
 st.write("Analyze financial data to predict Credit Score Classification (Poor, Standard, or Good)")
@@ -30,22 +23,22 @@ st.info("Adjust the inputs and click **Predict Credit Score Classification**")
 with st.container():
     col1, col2 = st.columns(2)
     with col1:
-        outstanding_debt = st.number_input("Outstanding Debt", min_value=0.0, max_value=1000000.0, value=809.98)
+        outstanding_debt = st.number_input("Outstanding Debt ($)", min_value=0.0, max_value=1000000.0, value=809.98)
         credit_mix = st.number_input("Credit Mix", min_value=0.0, max_value=10.0, value=2.0, step=0.5)
         changed_credit = st.number_input("Changed Credit Limit (%)", min_value=0.0, max_value=100.0, value=11.27)
-        amount_invested = st.number_input("Amount Invested Monthly", min_value=0.0, max_value=1000000.0, value=80.42)
+        amount_invested = st.number_input("Amount Invested Monthly ($)", min_value=0.0, max_value=1000000.0, value=80.42)
         num_inquiries = st.number_input("Num of Credit Inquiries", min_value=0, max_value=100, value=4)
-        total_emi = st.number_input("Total EMI per month", min_value=0.0, max_value=1000000.0, value=49.57)
-        annual_income = st.number_input("Annual Income", min_value=0.0, max_value=1000000.0, value=19114.12)
+        total_emi = st.number_input("Total EMI per month ($)", min_value=0.0, max_value=1000000.0, value=49.57)
+        annual_income = st.number_input("Annual Income ($)", min_value=0.0, max_value=1000000.0, value=19114.12)
 
     with col2:
         interest_rate = st.number_input("Interest Rate (%)", min_value=0.0, max_value=100.0, value=3.0, step=0.5)
         delay = st.number_input("Delay From Due Date (days)", min_value=0.0, max_value=100.0, value=3.0)
-        monthly_balance = st.number_input("Monthly Balance", min_value=0.0, max_value=1000000.0, value=312.490089)
+        monthly_balance = st.number_input("Monthly Balance ($)", min_value=0.0, max_value=1000000.0, value=312.490089)
         credit_ratio = st.number_input("Credit Utilization Ratio", min_value=0.0, max_value=100.0, value=26.83)
         num_delayed = st.number_input("Num of Delayed Payments", min_value=0, max_value=100, value=7)
         num_credit_card = st.number_input("Num Credit Card(s)", min_value=0, max_value=100, value=4)
-        monthly_inhand = st.number_input("Monthly In-Hand Salary", min_value=0.0, max_value=1000000.0, value=1824.83)
+        monthly_inhand = st.number_input("Monthly In-Hand Salary ($)", min_value=0.0, max_value=1000000.0, value=1824.83)
 
 
 # Perform prediction
