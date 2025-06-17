@@ -5,7 +5,7 @@ import joblib
 import pandas as pd
 
 # File IDs and URLs
-FILE_ID = "/184xmMhbCZMNnufVB-iqqP6eviYkrkaZJ" 
+FILE_ID = "184xmMhbCZMNnufVB-iqqP6eviYkrkaZJ" 
 URL = f"https://drive.google.com/uc?id={FILE_ID}"
 
 # Local path 
