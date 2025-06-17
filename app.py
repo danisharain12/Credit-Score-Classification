@@ -13,9 +13,9 @@ model_file = "Credit_Score_Classification.joblib"
 
 # Download if not 
 if not os.path.exists(model_file):
-    st.info("Downloading from Google Drive...")
+    st.info("")
     gdown.download(URL, model_file, quiet=False)
-    st.success("Model downloaded successfully.")
+    st.success("")
 
 # Confirm and load the model
 if os.path.exists(model_file):
