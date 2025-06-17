@@ -5,13 +5,13 @@ import joblib
 import pandas as pd
 
 # File IDs and URLs
-FILE_ID = "1MclSppXYEi6VPOpNvkHII-Cq-_ZOuam_"  # YOUR FILE ID HERE
+FILE_ID = "/184xmMhbCZMNnufVB-iqqP6eviYkrkaZJ" 
 URL = f"https://drive.google.com/uc?id={FILE_ID}"
 
-# Local path to save after downloading
+# Local path 
 model_file = "Credit_Score_Classification.joblib"
 
-# Download if not already downloaded
+# Download if not 
 if not os.path.exists(model_file):
     st.info("Downloading from Google Drive...")
     gdown.download(URL, model_file, quiet=False)
@@ -20,7 +20,6 @@ if not os.path.exists(model_file):
 # Confirm and load the model
 if os.path.exists(model_file):
 
-    # Loading the model
     try:
         model = joblib.load(model_file)
     except Exception as e:
@@ -45,7 +44,7 @@ with st.container():
     col1, col2 = st.columns(2)
     with col1:
         outstanding_debt = st.number_input("Outstanding Debt ($)", min_value=0.0, max_value=1000000.0, value=809.98)
-        credit_mix = st.number_input("Credit Mix ( Number of Credit Types)", min_value=0.0, max_value=10.0, value=2.0, step=0.5)
+        credit_mix = st.number_input("Credit Mix ( Number of Credit Types)", min_value=0.0, max_value=2.0, value=2.0, step=0.5)
         changed_credit = st.number_input("Change in Credit Limit (%)", min_value=0.0, max_value=100.0, value=11.27)
         amount_invested = st.number_input("Amount Invested Monthly ($)", min_value=0.0, max_value=1000000.0, value=80.42)
         num_inquiries = st.number_input("Number of Credit Inquiries", min_value=0, max_value=100, value=4)
